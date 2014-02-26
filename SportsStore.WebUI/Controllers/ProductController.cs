@@ -19,8 +19,9 @@ namespace SportsStore.WebUI.Controllers
 
         public ViewResult List(int page = 1)
         {
-
             return View(repository.Products.OrderBy(p => p.ProductID).Skip((page - 1) * pageSize).Take(pageSize)); 
         }
+
+        // TODO: continue implementing pagination
 	}
 }
