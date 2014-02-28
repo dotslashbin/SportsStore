@@ -21,7 +21,29 @@ namespace SportsStore.WebUI.Controllers
         public ViewResult List(string category, int page = 1)
         {
             ProductsListViewModel model = new ProductsListViewModel {
-                Products = repository.Products.Where(p => p.Category == null || p.Category == category).OrderBy(p => p.ProductID).Skip((page - 1) * pageSize).Take(pageSize),
+                Products = repository.Products
+                                    .Where(p => p.Category == "" || p.Category == category)
+                                    .OrderBy(p => p.ProductID)
+                                    .Skip((page - 1) * pageSize)
+                                    .Take(pageSize),
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = pageSize, 
+                    TotalItems = category == null? repository.Products.Count():repository.Products.Where(e => e.Category == category).Count()
+                }, 
+                CurrentCategory = category
+            };
+
+            /**
+             * NOTE: This was previous implementation that did not incorporate page listing with the selected category
+             * 
+             * ProductsListViewModel model = new ProductsListViewModel {
+                Products = repository.Products
+                                    .Where(p => p.Category == null || p.Category == category)
+                                    .OrderBy(p => p.ProductID)
+                                    .Skip((page - 1) * pageSize)
+                                    .Take(pageSize),
                 PagingInfo = new PagingInfo
                 {
                     CurrentPage = page,
@@ -30,6 +52,7 @@ namespace SportsStore.WebUI.Controllers
                 }, 
                 CurrentCategory = category
             };
+             */  
 
             return View(model); 
 
